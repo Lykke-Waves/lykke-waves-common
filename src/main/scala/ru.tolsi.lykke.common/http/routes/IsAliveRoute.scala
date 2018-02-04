@@ -3,7 +3,14 @@ package ru.tolsi.lykke.common.http.routes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
-import play.api.libs.json.{JsBoolean, JsObject, JsString}
+import play.api.libs.json._
+
+object IsAliveRoute {
+
+  case class ResponseObject(name: String, version: String, env: String, isDebug: Boolean)
+
+  implicit val ResponseWrites: Writes[ResponseObject] = Json.writes[ResponseObject]
+}
 
 /**
   * Is alive api method route
@@ -17,12 +24,10 @@ case class IsAliveRoute(name: String,
                         version: String,
                         env: String,
                         isDebug: Boolean) extends PlayJsonSupport {
-  private val responseObject =
-    JsObject(Map(
-      "name" -> JsString(name),
-      "version" -> JsString(version),
-      "env" -> JsString(env),
-      "isDebug" -> JsBoolean(isDebug)))
+
+  import IsAliveRoute._
+
+  private val responseObject = Json.toJson(ResponseObject(name, version, env, isDebug))
 
   val route: Route = path("isalive") {
     get {
