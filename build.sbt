@@ -16,9 +16,12 @@ version in ThisBuild := {
   }
 }
 
+resolvers += Resolver.bintrayRepo("hseeberger", "maven")
+
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.11",
   "com.wavesplatform" % "wavesj" % "0.3",
+  "de.heikoseeberger" %% "akka-http-play-json" % "1.20.0-RC1",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test
 )
 
