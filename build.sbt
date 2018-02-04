@@ -2,8 +2,6 @@ name := "lykke-waves-common"
 
 organization := "ru.tolsi"
 
-version := "0.1"
-
 version in ThisBuild := {
   if (git.gitCurrentTags.value.nonEmpty) {
     git.gitDescribedVersion.value.get
