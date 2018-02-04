@@ -7,7 +7,7 @@ import com.wavesplatform.wavesj._
 import org.bouncycastle.crypto.Digest
 import org.bouncycastle.crypto.digests.Blake2bDigest
 import org.whispersystems.curve25519.Curve25519
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Reads, Writes}
 
 import scala.util.Try
 
@@ -40,11 +40,19 @@ object UnsignedTransferTransaction {
   }
 
   def fromJsonString(string: String): Try[UnsignedTransferTransaction] = {
-    ???
+    Json.parse(string).validate[UnsignedTransferTransaction].asEither.left.map(errorsSeq => {
+      new NoSuchElementException(errorsSeq.map(e => e._1.toString() -> e._2.map(_.message).mkString("[", ",", "]"))
+        .mkString("[", ",", "]"))
+    }).toTry
   }
+
+  implicit val unsignedTransferTransactionReads: Reads[UnsignedTransferTransaction] = Json.reads[UnsignedTransferTransaction]
+  implicit val unsignedTransferTransactionWrites: Writes[UnsignedTransferTransaction] = Json.writes[UnsignedTransferTransaction]
 }
 
-case class UnsignedTransferTransaction(fromAddress: String, toAddress: String, amount: Long, assetId: Option[String], fee: Long, feeAssetId: Option[String], attachment: Option[String]) {
+case class UnsignedTransferTransaction(fromAddress: String, toAddress: String, amount: Long, fee: Long,
+                                       assetId: Option[String] = None, feeAssetId: Option[String] = None,
+                                       attachment: Option[String] = None) {
 
   import UnsignedTransferTransaction._
 
