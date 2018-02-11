@@ -22,8 +22,10 @@ class MongoAssetsStore(collection: MongoCollection) extends AssetsStore {
     })
 
   override def getAssets(take: Int, continuationId: Option[String] = None): Future[Seq[Asset]] = Future.successful {
-    val cur = MongoAssetsDAO.find(ref = MongoDBObject("_id" -> MongoDBObject("$gt" -> continuationId)))
-      .sort(orderBy = MongoDBObject("_id" -> 1))
+    val cur = (continuationId match {
+      case Some(continuationId) => MongoAssetsDAO.find(ref = MongoDBObject("_id" -> MongoDBObject("$gt" -> continuationId)))
+      case None => MongoAssetsDAO.find(MongoDBObject())
+    }).sort(orderBy = MongoDBObject("_id" -> 1))
       .limit(take)
     val list = try {
       cur.toList
