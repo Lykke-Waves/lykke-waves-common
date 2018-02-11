@@ -1,0 +1,3 @@
+package ru.tolsi.lykke.common.repository
+
+trait FromAddressTransactionsStore extends AddressTransactionsStore

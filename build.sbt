@@ -22,7 +22,11 @@ libraryDependencies ++= Seq(
   "de.heikoseeberger" %% "akka-http-play-json" % "1.20.0-RC1",
   "org.scorexfoundation" %% "scrypto" % "1.2.2",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
-  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test
+  "com.github.salat" %% "salat" % "1.11.2",
+  "org.mongodb" %% "casbah" % "3.1.1",
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test,
+  "com.github.fakemongo" % "fongo" % "2.1.0" % Test,
+  "org.scalatest" %% "scalatest" % "3.0.5" % Test
 )
 
 scalaVersion := "2.12.4"
