@@ -100,7 +100,7 @@ class MongoAddressTransactionsStoreSuite extends AsyncFunSuite with Matchers wit
     updatesF.flatMap(statuses => {
       statuses.forall(identity) shouldBe true
       store.getAddressTransactions("account", 10).flatMap(txs =>
-        store.getAddressTransactions("account", 10, Some(txs.last.addressAndTimestamp))
+        store.getAddressTransactions("account", 10, Some(txs.last.addressAndTimestampAndHash))
           .map(s =>
             s shouldBe transactions.sortBy(t => t.toAddress + "-" + t.timestamp).slice(10, 20)))
     })

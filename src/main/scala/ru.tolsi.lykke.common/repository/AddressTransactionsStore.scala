@@ -17,12 +17,12 @@ object Transaction {
     (field match {
       case "toAddress" => toAddress
       case "fromAddress" => fromAddress
-    }) + "-" + timestamp,
+    }) + "-" + timestamp + "-" + hash,
     operationId, timestamp, fromAddress, toAddress, assetId, amount, hash
   )
 }
 
-case class Transaction(@Key("_id") addressAndTimestamp: String,
+case class Transaction(@Key("_id") addressAndTimestampAndHash: String,
                        operationId: Option[String],
                        timestamp: Long,
                        fromAddress: String,
