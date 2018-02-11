@@ -27,6 +27,10 @@ abstract class MongoAddressTransactionsStore(collection: MongoCollection, observ
     r1.getN > 0 && r2.wasAcknowledged()
   }
 
+  // todo move out observation methods
+  def findObservables(addresses: Set[String]): Future[Set[String]] = Future.successful(
+    MongoAddressTransactionsObservationsDAO.find(MongoDBObject("_id" -> MongoDBObject("$in" -> addresses))).map(_.id).toSet)
+
   override def getAddressTransactions(address: String, take: Int, continuationId: Option[String] = None): Future[Seq[Transaction]] = Future.successful {
     val cur = (continuationId match {
       case Some(continuationId) =>

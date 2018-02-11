@@ -27,6 +27,9 @@ class MongoBalancesStore(collection: MongoCollection, observationsCollection: Mo
       result2.wasAcknowledged()
   }
 
+  def findObservables(addresses: Set[String]): Future[Set[String]] = Future.successful(
+    MongoBalancesObservationsDAO.find(MongoDBObject("_id" -> MongoDBObject("$in" -> addresses))).map(_.id).toSet)
+
   override def getBalances(take: Int, continuationId: Option[String] = None): Future[Seq[Balance]] = Future.successful {
     val cur = (continuationId match {
       case Some(continuationId) =>

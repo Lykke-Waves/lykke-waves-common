@@ -18,12 +18,22 @@ class MongoAssetsStore(collection: MongoCollection) extends AssetsStore {
     val cur = MongoAssetsDAO.find(ref = MongoDBObject("_id" -> MongoDBObject("$gt" -> continuationId)))
       .sort(orderBy = MongoDBObject("_id" -> 1))
       .limit(take)
-    try {
+    val list = try {
       cur.toList
     } finally {
       cur.close()
     }
+
+    val result = if (continuationId.isEmpty) {
+      AssetsStore.WavesAsset +: list.dropRight(1)
+    } else list
+
+    result
   }
 
-  override def getAsset(assetId: String): Future[Option[Asset]] = Future.successful(MongoAssetsDAO.findOneById(assetId))
+  override def getAsset(assetId: String): Future[Option[Asset]] = Future.successful(if (assetId == "WAVES") {
+    Some(AssetsStore.WavesAsset)
+  } else {
+    MongoAssetsDAO.findOneById(assetId)
+  })
 }

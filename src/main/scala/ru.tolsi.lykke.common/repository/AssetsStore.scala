@@ -6,6 +6,9 @@ import scala.concurrent.Future
 
 case class Asset(@Key("_id") assetId: String, name: String, address: String, accuracy: Int)
 
+object AssetsStore{
+  val WavesAsset = Asset("WAVES", "Waves", "", 8)
+}
 trait AssetsStore {
   def registerAsset(asset: Asset): Future[Unit]
 
