@@ -24,7 +24,7 @@ class MongoAssetsStoreSuite extends AsyncFunSuite with Matchers with BeforeAndAf
     val db = fongo.getDB(dbName)
     val store = new MongoAssetsStore(new MongoCollection(db.getCollection("assets")))
 
-    val asset = Asset("a1", "aaa", "bbb", 100L, 9)
+    val asset = Asset("a1", "aaa", "bbb", 9)
     store.registerAsset(asset).flatMap(_ =>
       store.getAsset("a1").map(_ shouldBe Some(asset)))
   }
@@ -33,7 +33,7 @@ class MongoAssetsStoreSuite extends AsyncFunSuite with Matchers with BeforeAndAf
     val db = fongo.getDB(dbName)
     val store = new MongoAssetsStore(new MongoCollection(db.getCollection("assets")))
 
-    val assets = (for {i <- 0 to 20} yield Asset("a" + i, "aaa", "bbb", 100L, 9)).sortBy(_.assetId)
+    val assets = (for {i <- 0 to 20} yield Asset("a" + i, "aaa", "bbb", 9)).sortBy(_.assetId)
 
     val resisterAssetsF = Future.sequence(assets.map(store.registerAsset))
 
@@ -45,7 +45,7 @@ class MongoAssetsStoreSuite extends AsyncFunSuite with Matchers with BeforeAndAf
     val db = fongo.getDB(dbName)
     val store = new MongoAssetsStore(new MongoCollection(db.getCollection("assets")))
 
-    val assets = (for {i <- 0 to 20} yield Asset("a" + i, "aaa", "bbb", 100L, 9)).sortBy(_.assetId)
+    val assets = (for {i <- 0 to 20} yield Asset("a" + i, "aaa", "bbb", 9)).sortBy(_.assetId)
 
     val resisterAssetsF = Future.sequence(assets.map(store.registerAsset))
 
