@@ -3,7 +3,7 @@ Lykke Waves common library. It contains common classes for accessing data and in
 
 # Installation
 
-The build library uses [sbt](https://www.scala-sbt.org/):
+The library uses [sbt](https://www.scala-sbt.org/) for building:
 
 ```
 sbt clean publishLocal
