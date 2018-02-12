@@ -3,7 +3,7 @@ Lykke Waves common library. It contains common classes for accessing data and in
 
 # Installation
 
-The library uses [sbt](https://www.scala-sbt.org/) for building:
+This library uses [sbt](https://www.scala-sbt.org/) for building:
 
 ```
 sbt clean publishLocal
@@ -13,7 +13,7 @@ After that, the library will be available in the local ivy2 repository `~/.ivy2`
 
 # Testing
 
-The library uses [sbt](https://www.scala-sbt.org/) for testing:
+This library uses [sbt](https://www.scala-sbt.org/) for testing:
 
 ```
 sbt clean test
