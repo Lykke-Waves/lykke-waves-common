@@ -3,7 +3,7 @@ package ru.tolsi.lykke.common.repository.mongo
 import com.github.fakemongo.Fongo
 import com.mongodb.casbah.MongoCollection
 import org.scalatest.{AsyncFunSuite, BeforeAndAfterEach, Matchers}
-import ru.tolsi.lykke.common.repository.Asset
+import ru.tolsi.lykke.common.repository.{Asset, AssetsStore}
 
 import scala.concurrent.Future
 
@@ -38,7 +38,7 @@ class MongoAssetsStoreSuite extends AsyncFunSuite with Matchers with BeforeAndAf
     val resisterAssetsF = Future.sequence(assets.map(store.registerAsset))
 
     resisterAssetsF.flatMap(_ =>
-      store.getAssets(10).map(_ shouldBe assets.take(10)))
+      store.getAssets(10).map(_ shouldBe AssetsStore.WavesAsset +: assets.take(9)))
   }
 
   test("MongoAssetsStore.getAssets should return correct sized lists with continuation") {
@@ -51,7 +51,7 @@ class MongoAssetsStoreSuite extends AsyncFunSuite with Matchers with BeforeAndAf
 
     resisterAssetsF.flatMap(_ =>
       store.getAssets(10).flatMap(l => {
-        store.getAssets(10, Some(l.last.assetId)).map(_ shouldBe assets.slice(10, 20))
+        store.getAssets(10, Some(l.last.assetId)).map(_ shouldBe assets.slice(9, 19))
       }))
   }
 
