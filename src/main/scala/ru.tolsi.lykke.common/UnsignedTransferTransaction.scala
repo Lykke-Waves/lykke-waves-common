@@ -7,7 +7,7 @@ import com.wavesplatform.wavesj._
 import org.bouncycastle.crypto.Digest
 import org.bouncycastle.crypto.digests.Blake2bDigest
 import org.whispersystems.curve25519.Curve25519
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.json.{JsObject, Json, Reads, Writes}
 
 import scala.util.Try
 

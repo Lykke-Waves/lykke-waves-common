@@ -4,10 +4,12 @@ import salat.annotations.Key
 
 import scala.concurrent.Future
 
-case class BroadcastOperation(@Key("_id") operationId: String, signedTransaction: String)
+case class BroadcastOperation(@Key("_id") operationId: String, transactionId: String, signedTransaction: String)
 
 trait BroadcastOperationsStore {
   def addBroadcastOperation(operation: BroadcastOperation): Future[Boolean]
+
+  def findOperationIdByTransactionId(transactionId: String): Future[Option[String]]
 
   def removeBroadcastOperation(id: String): Future[Boolean]
 }
