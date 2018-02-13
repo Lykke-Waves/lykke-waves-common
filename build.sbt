@@ -26,6 +26,8 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.8.0-beta1",
   "com.github.salat" %% "salat" % "1.11.2",
   "org.mongodb" %% "casbah" % "3.1.1",
+  "org.scalaj" %% "scalaj-http" % "2.3.0",
+  "commons-io" % "commons-io" % "2.6",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.0.11" % Test,
   "com.github.fakemongo" % "fongo" % "2.1.0" % Test,
   "org.scalatest" %% "scalatest" % "3.0.5" % Test
