@@ -18,3 +18,11 @@ This library uses [sbt](https://www.scala-sbt.org/) for testing:
 ```
 sbt clean test
 ```
+
+# Docker compose
+
+You can build and start all the lykke-waves modules using
+
+```
+docker-compose up -d
+```
