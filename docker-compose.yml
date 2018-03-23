@@ -6,8 +6,6 @@ services:
     ports:
       - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
-    ports:
-      - "27017:27017"
   api:
     build:
       context: https://github.com/Lykke-Waves/lykke-waves-blockchain-api.git
