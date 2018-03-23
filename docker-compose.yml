@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  mongo:
+    image: mongo:3.6
+  ports:
+    - "27017:27017"
+  api:
+    build:
+      context: https://github.com/Lykke-Waves/lykke-waves-blockchain-api.git
+    ports:
+      - "8080:8080"
+  scanner:
+    build:
+      context: https://github.com/Lykke-Waves/lykke-waves-blockchain-scanner.git
+  wallet:
+    build:
+      context: https://github.com/Lykke-Waves/lykke-waves-wallet.git
+    ports:
+      - "8081:8081"
