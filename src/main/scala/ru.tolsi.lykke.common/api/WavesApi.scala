@@ -31,6 +31,10 @@ class WavesApi(url: String) extends ScannerApi with HttpClientUsage {
     makeGetRequest(s"$url/blocks/height").map(js => Json.parse(js).as[JsObject].value("height").as[Int])
   }
 
+  def balance(address: String): Future[Long] = {
+    makeGetRequest(s"$url/addresses/balance/$address").map(js => Json.parse(js).as[JsObject].value("balance").as[Long])
+  }
+
   def checkErrorStatus(js: JsObject): Try[JsObject] = {
     if (js.value.get("status").contains("error")) {
       Failure(new RuntimeException(js.value("details").as[String]))
