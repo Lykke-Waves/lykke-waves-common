@@ -21,7 +21,10 @@ object UnsignedTransferTransaction {
   // for signing
   private val cipher = Curve25519.getInstance(Curve25519.BEST)
 
-  private def normalize(assetId: Option[String]) = assetId.filter(_.isEmpty).map(_ => Asset.WAVES).getOrElse(assetId.get)
+  private def normalize(assetId: Option[String]) = assetId match {
+    case Some(assetId) => assetId
+    case None => Asset.WAVES
+  }
 
   private def isWaves(assetId: Option[String]) = normalize(assetId) == WAVES
 
