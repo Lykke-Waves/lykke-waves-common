@@ -11,5 +11,7 @@ trait BroadcastOperationsStore {
 
   def findOperationIdByTransactionId(transactionId: String): Future[Option[String]]
 
+  def findBroadcastOperationByOperationId(transactionId: String): Future[Option[BroadcastOperation]]
+
   def removeBroadcastOperation(id: String): Future[Boolean]
 }

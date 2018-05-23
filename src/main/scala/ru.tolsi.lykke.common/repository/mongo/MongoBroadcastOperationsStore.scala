@@ -33,4 +33,7 @@ class MongoBroadcastOperationsStore(collection: MongoCollection) extends Broadca
 
   override def findOperationIdByTransactionId(transactionId: String): Future[Option[String]] = Future.successful(
     MongoBroadcastOperationsDAO.findOne(MongoDBObject("transactionId" -> transactionId)).map(_.operationId))
+
+  override def findBroadcastOperationByOperationId(operationId: String): Future[Option[BroadcastOperation]] = Future.successful(
+    MongoBroadcastOperationsDAO.findOneById(operationId))
 }
