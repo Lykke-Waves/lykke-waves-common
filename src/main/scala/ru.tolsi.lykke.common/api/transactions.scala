@@ -34,10 +34,11 @@ object WavesTransferTransaction {
 }
 
 sealed trait WavesTransaction {
+  def id: String
   def height: Option[Int] = None
 }
 
-case class WavesTransferTransaction(id: String,
+case class WavesTransferTransaction(override val id: String,
                                     from: String,
                                     fromPublicKey: String,
                                     to: String,
@@ -71,7 +72,7 @@ object WavesIssueTransaction {
   }
 }
 
-case class WavesIssueTransaction(id: String,
+case class WavesIssueTransaction(override val id: String,
                                  from: String,
                                  fromPublicKey: String,
                                  amount: Long,
