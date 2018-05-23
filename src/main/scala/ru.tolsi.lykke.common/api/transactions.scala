@@ -23,16 +23,19 @@ object WavesTransferTransaction {
       (JsPath \ "fee").read[Long] and
       (JsPath \ "feeAssetId").readNullable[String] and
       (JsPath \ "attachment").readNullable[String].map(b => if (b.nonEmpty && b.exists(_.nonEmpty)) Base58.decode(b.get).get else Array.emptyByteArray) and
-      (JsPath \ "signature").read[String]
+      (JsPath \ "signature").read[String] and
+      (JsPath \ "height").readNullable[Int]
     ) { (id: String, t: Int, sender: String, senderPublicKey: String, recipient: String, amount: Long, assetId: Option[String],
-         timestamp: Long, fee: Long, feeAssetId: Option[String], attachment: Array[Byte], signature: String) => {
+         timestamp: Long, fee: Long, feeAssetId: Option[String], attachment: Array[Byte], signature: String, height: Option[Int]) => {
     require(t == WavesTransaction.TransferType)
-    new WavesTransferTransaction(id, sender, senderPublicKey, recipient, amount, assetId, timestamp, fee, feeAssetId, attachment, signature)
+    new WavesTransferTransaction(id, sender, senderPublicKey, recipient, amount, assetId, timestamp, fee, feeAssetId, attachment, signature, height)
   }
   }
 }
 
-sealed trait WavesTransaction
+sealed trait WavesTransaction {
+  def height: Option[Int] = None
+}
 
 case class WavesTransferTransaction(id: String,
                                     from: String,
@@ -44,7 +47,8 @@ case class WavesTransferTransaction(id: String,
                                     fee: Long,
                                     feeAssetId: Option[String],
                                     attachment: Array[Byte],
-                                    signature: String) extends WavesTransaction
+                                    signature: String,
+                                    override val height: Option[Int]) extends WavesTransaction
 
 object WavesIssueTransaction {
   implicit val wavesIssueTransactionReads = (
@@ -58,10 +62,11 @@ object WavesIssueTransaction {
       (JsPath \ "fee").read[Long] and
       (JsPath \ "name").read[String] and
       (JsPath \ "description").read[String] and
-      (JsPath \ "signature").read[String]
-    ) { (id: String, t: Int, sender: String, senderPublicKey: String, amount: Long, decimals: Byte, timestamp: Long, fee: Long, name: String, description: String, signature: String) => {
+      (JsPath \ "signature").read[String] and
+      (JsPath \ "height").readNullable[Int]
+    ) { (id: String, t: Int, sender: String, senderPublicKey: String, amount: Long, decimals: Byte, timestamp: Long, fee: Long, name: String, description: String, signature: String, height: Option[Int]) => {
     require(t == WavesTransaction.IssueType)
-    new WavesIssueTransaction(id: String, sender, senderPublicKey, amount, decimals, timestamp, fee, name, description, signature)
+    new WavesIssueTransaction(id: String, sender, senderPublicKey, amount, decimals, timestamp, fee, name, description, signature, height)
   }
   }
 }
@@ -75,4 +80,5 @@ case class WavesIssueTransaction(id: String,
                                  fee: Long,
                                  name: String,
                                  description: String,
-                                 signature: String) extends WavesTransaction
+                                 signature: String,
+                                 override val height: Option[Int]) extends WavesTransaction
