@@ -27,6 +27,8 @@ object WavesApi {
 
 class WavesApi(url: String) extends ScannerApi with HttpClientUsage {
 
+  import WavesApi._
+
   def height: Future[Int] = {
     makeGetRequest(s"$url/blocks/height").map(js => Json.parse(js).as[JsObject].value("height").as[Int])
   }
@@ -75,6 +77,21 @@ class WavesApi(url: String) extends ScannerApi with HttpClientUsage {
     makeGetRequest(s"$url/blocks/signature/$signature").map(js => checkErrorStatus(Json.parse(js).as[JsObject])
       .toOption
       .map(_.as[WavesBlock]))
+  }
+
+  def utx(): Future[Seq[WavesTransaction]] = {
+    makeGetRequest(s"$url/transactions/unconfirmed").map(js => {
+      val arr = checkErrorStatus(Json.parse(js).as[JsObject]).get
+      parseOnlyTransfersAndIssuesFromJson(arr.as[Seq[JsObject]])
+    })
+  }
+
+  def transactionInfo(id: String): Future[Option[WavesTransaction]] = {
+    makeGetRequest(s"$url/transactions/info/$id").map(js =>
+      checkErrorStatus(Json.parse(js).as[JsObject])
+        .toOption
+        .map(_.as[JsObject])
+        .flatMap(o => parseOnlyTransfersAndIssuesFromJson(Seq(o)).headOption))
   }
 
   def sendSignedTransaction(txJson: String): Future[Unit] = {
