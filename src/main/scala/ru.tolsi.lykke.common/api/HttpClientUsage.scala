@@ -52,19 +52,23 @@ trait HttpClientUsage extends StrictLogging {
     Future.failed(new IOException(s"Request '$url' failed after $retryCount proxy switches and retries", e))
   }
 
-  protected def makeGetRequest(url: String, retryCount: Int = 0): Future[String] = {
+  protected def makeGetRequest(url: String, retryCount: Int = 0, allowNotFound: Boolean = false): Future[String] = {
     val getRequest = new HttpGet(url)
 
     try
       Future.fromTry(Try {
         val httpResponse = httpClient.execute(getRequest, httpClientContext)
-        val body = IOUtils.toString(httpResponse.getEntity.getContent, Charset.defaultCharset)
+        var body = IOUtils.toString(httpResponse.getEntity.getContent, Charset.defaultCharset)
         val httpStatus = httpResponse.getStatusLine.getStatusCode
 
         httpResponse.getEntity.getContent.close()
         httpResponse.asInstanceOf[CloseableHttpResponse].close()
         if (httpStatus != HttpStatus.SC_OK) {
-          throw new IOException(s"Code: $httpStatus, body: '$body'")
+          if (!allowNotFound) {
+            throw new IOException(s"Code: $httpStatus, body: '$body'")
+          } else {
+            body = "404"
+          }
         }
         body
       }).recoverWith {

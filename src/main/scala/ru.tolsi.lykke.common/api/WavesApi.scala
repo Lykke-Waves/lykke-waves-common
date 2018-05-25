@@ -87,11 +87,15 @@ class WavesApi(url: String) extends ScannerApi with HttpClientUsage {
   }
 
   def transactionInfo(id: String): Future[Option[WavesTransaction]] = {
-    makeGetRequest(s"$url/transactions/info/$id").map(js =>
-      checkErrorStatus(Json.parse(js).as[JsObject])
-        .toOption
-        .map(_.as[JsObject])
-        .flatMap(o => parseOnlyTransfersAndIssuesFromJson(Seq(o)).headOption))
+    makeGetRequest(s"$url/transactions/info/$id", allowNotFound = true).map(js =>
+      if (js == "404") {
+        None
+      } else {
+        checkErrorStatus(Json.parse(js).as[JsObject])
+          .toOption
+          .map(_.as[JsObject])
+          .flatMap(o => parseOnlyTransfersAndIssuesFromJson(Seq(o)).headOption)
+      })
   }
 
   def sendSignedTransaction(txJson: String): Future[Unit] = {
