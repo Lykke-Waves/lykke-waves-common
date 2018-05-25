@@ -81,7 +81,7 @@ class WavesApi(url: String) extends ScannerApi with HttpClientUsage {
 
   def utx(): Future[Seq[WavesTransaction]] = {
     makeGetRequest(s"$url/transactions/unconfirmed").map(js => {
-      val arr = checkErrorStatus(Json.parse(js).as[JsObject]).get
+      val arr = Json.parse(js).as[JsArray]
       parseOnlyTransfersAndIssuesFromJson(arr.as[Seq[JsObject]])
     })
   }
