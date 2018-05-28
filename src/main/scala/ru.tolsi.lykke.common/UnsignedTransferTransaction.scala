@@ -7,13 +7,14 @@ import com.wavesplatform.wavesj._
 import org.bouncycastle.crypto.Digest
 import org.bouncycastle.crypto.digests.Blake2bDigest
 import org.whispersystems.curve25519.Curve25519
-import play.api.libs.json.{JsObject, Json, Reads, Writes}
+import play.api.libs.json.{Json, Reads, Writes}
+import scorex.crypto.hash.Blake2b256
 
 import scala.util.Try
 
 object UnsignedTransferTransaction {
   private val TRANSFER = 4.toByte
-  private val MIN_BUFFER_SIZE = 120
+  private val MIN_BUFFER_SIZE = 87
 
   // for id calculation
   private val BLAKE2B256 = new Blake2bDigest(256)
@@ -35,7 +36,7 @@ object UnsignedTransferTransaction {
     res
   }
 
-  private def idHash(message: Array[Byte], ofs: Int, len: Int) = hash(message, ofs, len, BLAKE2B256)
+  private def idHash(message: Array[Byte]) = Blake2b256.hash(message)
 
   private def putAsset(buffer: ByteBuffer, assetId: Option[String]): Unit = {
     if (isWaves(assetId)) buffer.put(0.toByte)
@@ -54,29 +55,27 @@ object UnsignedTransferTransaction {
 }
 
 case class UnsignedTransferTransaction(fromAddress: String, toAddress: String, amount: Long, fee: Long,
-                                       assetId: Option[String] = None, feeAssetId: Option[String] = None,
+                                       timestamp: Long, assetId: Option[String] = None, feeAssetId: Option[String] = None,
                                        attachment: Option[String] = None) {
 
   import UnsignedTransferTransaction._
 
   //region Transaction ID calculation
 
-  private def buildToSignData(senderPublicKey: PublicKeyAccount): Array[Byte] = {
+  def buildToSignData(senderPublicKey: PublicKeyAccount): Array[Byte] = {
     val attachmentBytes = attachment.getOrElse("").getBytes
     val datalen = (if (isWaves(assetId)) 0 else 32) + (if (isWaves(feeAssetId)) 0 else 32) + attachmentBytes.length + MIN_BUFFER_SIZE
-    val timestamp = System.currentTimeMillis
     val buf = ByteBuffer.allocate(datalen)
     buf.put(TRANSFER).put(senderPublicKey.getPublicKey)
     putAsset(buf, assetId)
     putAsset(buf, feeAssetId)
     buf.putLong(timestamp).putLong(amount).putLong(fee).put(Base58.decode(toAddress)).putShort(attachmentBytes.length.toShort).put(attachmentBytes)
     buf.array
-    buf.array
   }
 
   def id(sender: PublicKeyAccount): TransactionId = {
     val toSignData = buildToSignData(sender)
-    val id = idHash(toSignData, 0, toSignData.length)
+    val id = idHash(toSignData)
     TransactionId(Base58.encode(id))
   }
 
