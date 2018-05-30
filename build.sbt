@@ -20,7 +20,7 @@ resolvers += Resolver.bintrayRepo("hseeberger", "maven")
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.11",
-  "com.wavesplatform" % "wavesj" % "0.3",
+  "com.wavesplatform" % "wavesj" % "0.6.2",
   "de.heikoseeberger" %% "akka-http-play-json" % "1.20.0-RC1",
   "org.scorexfoundation" %% "scrypto" % "1.2.2",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",

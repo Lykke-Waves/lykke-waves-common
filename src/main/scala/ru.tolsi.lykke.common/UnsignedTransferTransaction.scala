@@ -87,6 +87,6 @@ case class UnsignedTransferTransaction(fromAddress: String, toAddress: String, a
   }
 
   def signTransaction(account: PrivateKeyAccount): Transaction = {
-    Transaction.makeTransferTx(account, toAddress, amount, assetId.orNull, fee, feeAssetId.orNull, attachment.orNull)
+    Transaction.makeTransferTx(account, toAddress, amount, assetId.orNull, fee, feeAssetId.orNull, attachment.orNull, timestamp)
   }
 }
